@@ -33,20 +33,20 @@ export function *getParameters(parameters: SSM.ParameterList | undefined, prefix
     }
 }
 
-export async function getConfiguragionFromSSM({ region, prefix, }: AwsConfiguration): Promise<EnvVar[]> {
+async function getConfiguragionFromSSM({ region, prefix, }: AwsConfiguration): Promise<EnvVar[]> {
     const client = new SSM({ apiVersion: "latest", region })
     const names = getParameterStorePaths(process.env, prefix);
     const envs = await client.getParameters({ Names: names, WithDecryption: true }).promise()
     return [...getParameters(envs.Parameters, prefix)];
 }
 
-export function overrideDefaultConfiguration(envs: EnvVar[]): void {
+function overrideDefaultConfiguration(envs: EnvVar[]): void {
     for (const env of envs) {
         process.env[env.name] = env.value;
     }
 }
 
-export async function setupAppConfiguration(cfg: AwsConfiguration) : Promise<void> {
+export async function loadAwsSsm(cfg: AwsConfiguration) : Promise<void> {
     const envs = await getConfiguragionFromSSM(cfg);
     overrideDefaultConfiguration(envs);
 }

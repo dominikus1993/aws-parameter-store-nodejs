@@ -1,1 +1,1 @@
-export {setupAppConfiguration, getConfiguragionFromSSM, overrideDefaultConfiguration, EnvVar} from "./ssm"
+export {loadAwsSsm, EnvVar} from "./ssm"
